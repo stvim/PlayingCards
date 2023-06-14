@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,25 +17,27 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BKO-4N-p6b" customClass="PlayingCardView" customModule="PlayingCards" customModuleProvider="target">
                                 <rect key="frame" x="16" y="153.66666666666669" width="361" height="569.66666666666652"/>
-                                <color key="backgroundColor" systemColor="systemTealColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="750" constant="800" id="OHp-ew-PCw"/>
                                     <constraint firstAttribute="width" secondItem="BKO-4N-p6b" secondAttribute="height" multiplier="5:8" constant="5" id="kyO-Dl-mfG"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="pips">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="rank">
-                                        <integer key="value" value="7"/>
+                                        <integer key="value" value="0"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="suit" value="♣️"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="suit" value="X"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Z1I-RB-P3m" appends="YES" id="aEL-qC-3kc"/>
+                                </connections>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="0.90334533895392211" blue="0.52989347248661034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BKO-4N-p6b" secondAttribute="bottom" constant="16" id="0Hb-aG-8lF"/>
                             <constraint firstItem="BKO-4N-p6b" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="1pY-1j-nT9"/>
@@ -49,15 +50,18 @@
                             <constraint firstItem="BKO-4N-p6b" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="uJJ-lr-8MU"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="playingCardView" destination="BKO-4N-p6b" id="OHe-fB-Xwg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="Z1I-RB-P3m">
+                    <connections>
+                        <action selector="tapOnCard:" destination="BYZ-38-t0r" id="Cx7-7i-gHc"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="130.53435114503816" y="-34.507042253521128"/>
         </scene>
     </scenes>
-    <resources>
-        <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>

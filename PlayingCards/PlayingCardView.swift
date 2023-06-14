@@ -17,6 +17,19 @@ class PlayingCardView: UIView {
     @IBInspectable
     var isFaceUp:Bool = false { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
+    var faceCardScale:CGFloat = SizeRatio.faceCardImageSizeToBoundsHeight  { didSet { setNeedsDisplay() } }
+    
+    @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer: UIPinchGestureRecognizer) {
+        if !isFaceUp {
+            switch(recognizer.state) {
+            case .changed, .ended:
+                faceCardScale *= recognizer.scale
+                recognizer.scale = 1.0
+            default: break
+            }
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         setNeedsDisplay()
         setNeedsLayout()
@@ -30,28 +43,32 @@ class PlayingCardView: UIView {
         configureCardLabel(lowerCardLabel)
 //        lowerCardLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
         lowerCardLabel.transform = CGAffineTransform.identity
-            .translatedBy(x: lowerCardLabel.frame.width, y: lowerCardLabel.frame.height)
-//            .rotated(by: CGFloat.pi)
+//            .translatedBy(x: lowerCardLabel.frame.width, y: lowerCardLabel.frame.height)
+            .rotated(by: CGFloat.pi)
         lowerCardLabel.frame.origin = bounds.bottomRight
             .offsetBy(dx: -cornerOffset, dy: -cornerOffset)
             .offsetBy(dx: -lowerCardLabel.frame.width, dy: -lowerCardLabel.frame.height)
     }
     
     override func draw(_ rect: CGRect) {
-        var roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 16.0)
+        var roundedRect = UIBezierPath(roundedRect: bounds.zoom(by: SizeRatio.cardSizeToViewSize), cornerRadius: 16.0)
         UIColor.white.setFill()
         roundedRect.fill()
         roundedRect.addClip()
         
-        if !isFaceUp {
+        if isFaceUp {
+            drawPips()
+        } else {
             if let cardBackImage = UIImage(named: "Leo_1000") {
-                cardBackImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsHeight))
-            } else {
-                drawPips()
+                cardBackImage.draw(in: bounds.zoom(by: faceCardScale))
             }
         }
     }
     
+    @IBAction func btnSwitchClic(_ sender: UIButton) {
+        isFaceUp = !isFaceUp
+        
+    }
     lazy var upperCardLabel = createCardLabel()
     lazy var lowerCardLabel = createCardLabel()
     
@@ -70,7 +87,7 @@ class PlayingCardView: UIView {
     }
     
     private var cornerAttributedString:NSAttributedString {
-        cardLabelAttributedString("\(rank)\n\(suit)", fontSize: cornerFontSize)
+        cardLabelAttributedString("\(rankString)\n\(suit)", fontSize: cornerFontSize)
     }
     private func cardLabelAttributedString(_ label:String, fontSize:CGFloat) -> NSAttributedString {
         
@@ -132,10 +149,11 @@ class PlayingCardView: UIView {
 
 extension PlayingCardView {
     private struct SizeRatio {
-        static let cornerRadiusToBoundsHeight : CGFloat = 0.06
-        static let cornerFontSizeToBoundsHeight : CGFloat = 0.085
+        static let cornerRadiusToBoundsHeight : CGFloat = 0.07
+        static let cornerFontSizeToBoundsHeight : CGFloat = 0.065
         static let cornerOffsetToCornerRadius : CGFloat = 0.33
         static let faceCardImageSizeToBoundsHeight : CGFloat = 0.75
+        static let cardSizeToViewSize : CGFloat = 0.98
     }
     
     var cornerRadius : CGFloat {
